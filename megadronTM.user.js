@@ -8,6 +8,8 @@
 // @match        https://megadron.pl/pl/products/*
 // @grant        GM_xmlhttpRequest
 // @connect      client6220.idosell.com
+// @updateURL    https://raw.githubusercontent.com/damian-megadron/megadron/refs/heads/main/megadronTM.user.js
+// @downloadURL  https://raw.githubusercontent.com/damian-megadron/megadron/refs/heads/main/megadronTM.user.js
 // ==/UserScript==
 
 /* global $, IAI */ //bo krzyczy
