@@ -363,9 +363,9 @@
 
         const allegroCourierMap = [
             { match: /orlen/i, label: 'Orlen Paczka' },
+            { match: /dpd/i, label: 'DPD' },
             { match: /\bone\b/i, label: 'One Kurier' },
             { match: /inpost/i, label: 'InPost' },
-            { match: /dpd/i, label: 'DPD' },
             { match: /dhl/i, label: 'DHL' },
             { match: /ups/i, label: 'UPS' },
             { match: /gls/i, label: 'GLS' },
