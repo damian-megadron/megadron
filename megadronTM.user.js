@@ -101,16 +101,17 @@
 
         function makeBadgeM1(m1) {
             const qty = parseInt(m1, 10);
-            let bg, border, color;
             if (m1 === null) {
-                bg = '#f8d7da'; border = '#dc3545'; color = '#721c24';
-            } else if (isNaN(qty) || qty <= 0) {
-                bg = '#f8d7da'; border = '#dc3545'; color = '#721c24';
-            } else if (qty <= 2) {
-                bg = '#fff3cd'; border = '#ffc107'; color = '#856404';
-            } else {
-                bg = '#d4edda'; border = '#28a745'; color = '#155724';
             }
+            let displayM1 = m1 !== null ? m1 : '-';
+            if (m1 === 'jest') {
+                displayM1 = "<i> elektronicznie </i>";
+            }
+
+            if (qty === 0 || m1 === '0') {
+                displayM1 = 'BRAK';
+            }
+
             const d = document.createElement('div');
             d.className = 'm1-stock-badge';
             d.style.cssText = `
@@ -119,14 +120,15 @@
             border-radius:4px;
             font-size:12px;
             display:inline-block;
-            background:${bg};
-            border:1px solid ${border};
-            color:${color};
+            background:#FDF5E6;
+            border:1px solid #D2B48C;
+            color:#721c24;
             `;
 
-            d.innerHTML = `📦 M1: <strong>${m1 !== null ? m1 : '-'}</strong>`;
+            d.innerHTML = `📦 M1: <strong>${displayM1}</strong>`;
             return d;
         }
+
 
         function processLinksM1() {
             document.querySelectorAll('a[onclick*="showProductInfo"]').forEach(a => {
@@ -154,7 +156,15 @@
 
                 const placeholder = document.createElement('div');
                 placeholder.className = 'm1-stock-badge';
-                placeholder.style.cssText = `margin-top:4px;padding:2px 8px;border-radius:4px;font-size:12px;display:inline-block;background:#fff3cd;border:1px solid #ffc107;color:#856404;`;
+                placeholder.style.cssText = `
+                margin-top:4px;
+                padding:2px 8px;
+                border-radius:4px;
+                font-size:12px;
+                display:inline-block;
+                background:#FDF5E6;
+                border:1px solid #D2B48C;
+                color:#721c24;`;
                 placeholder.innerHTML = '📦 M1: <strong>ładowanie…</strong>';
                 lokalizacjeP.insertAdjacentElement('afterend', placeholder);
 
@@ -368,9 +378,7 @@
             { match: /inpost/i, label: 'InPost' },
             { match: /dhl/i, label: 'DHL' },
             { match: /ups/i, label: 'UPS' },
-            { match: /gls/i, label: 'GLS' },
             { match: /pocztex/i, label: 'Pocztex' },
-            { match: /poczta|pp/i, label: 'PP' }
         ];
 
         function getCourierLabel(name) {
@@ -460,7 +468,7 @@
 
 
     // ════════════════════════════════════════════════════════════════════════
-    // LINKI Z ZAN DO ALLEGRO
+    // LINKI Z ZAM DO ALLEGRO
     // ════════════════════════════════════════════════════════════════════════
 
     if (url.includes('/panel/orderd.php') || url.includes('/panel/app/orderd.php')) {
@@ -555,13 +563,14 @@
             const orders = [...links].map(a => ({ number: a.textContent.trim(), href: a.href }));
 
             const box = document.createElement('div');
-            box.id = 'tm-order-box';`
-            box.style.cssText = '
+            box.id = 'tm-order-box';
+            box.style.cssText = `
             position:fixed;
             top:60px;right:20px;
             z-index:99999;
             background:#c62828;
             color:#fff;
+
             font-family:Arial,sans-serif;
             font-size:13px;
             font-weight:bold;
@@ -569,8 +578,8 @@
             border-radius:6px;
             box-shadow:0 4px 16px rgba(0,0,0,0.4);
             max-width:280px;
-            line-height:1.6;';
-            `
+            line-height:1.6;
+            `;
 
             const title = document.createElement('div');
             title.style.cssText = 'font-size:15px;margin-bottom:8px;';
@@ -632,8 +641,8 @@
                         color:#b71c1c;
                         padding:1px 4px;
                         border-radius:3px;
-                        outline:2px solid #e53935;';
-                        `
+                        outline:2px solid #e53935;`
+
                         b.title = `Ten klient ma ${elements.length} zamówienia na liście`;
                     });
 
@@ -704,7 +713,7 @@
     // PRZEKIEROWANIE DO IDOSELL NA MEGADRON.PL
     // ════════════════════════════════════════════════════════════════════════
 
-    if (url.includes('megadron.pl/pl/products/')) {
+    if (url.includes('megadron.pl/pl/products')) {
 
         const skuFromUrl = (window.location.pathname.match(/-(\d+)\.html$/) || [])[1];
         if (skuFromUrl) {
@@ -727,22 +736,22 @@
                 badge.target = '_blank';
                 badge.rel = 'noopener noreferrer';
                 badge.style.cssText = `
-                padding:4px 10px;
-                margin-bottom:8px;
-                margin-right:8px;
-                background:#cce5ff;
-                border:1px solid #004085;
-                border-radius:4px;
-                font-size:14px;
-                font-weight:bold;
-                display:inline-block;
-                width:fit-content;
-                cursor:pointer;
-                color:#004085;
-                text-decoration:none;';
+                    padding:4px 10px;
+                    margin-bottom:8px;
+                    margin-right:8px;
+                    background:#cce5ff;
+                    border:1px solid #004085;
+                    border-radius:4px;
+                    font-size:14px;
+                    font-weight:bold;
+                    display:inline-block;
+                    width:fit-content;
+                    cursor:pointer;
+                    color:#004085;
+                    text-decoration:none;
+                `;
                 badge.innerHTML = 'IDOSELL';
                 actionsBar.insertAdjacentElement('afterbegin', badge);
-                `
             });
         }
     }
@@ -810,7 +819,7 @@
                                 badge.style.background = '#d4edda';
                                 badge.style.borderColor = '#28a745';
                             } else {
-                                badge.innerHTML = '📦: <strong>brak</strong>';
+                                badge.innerHTML = '📦: <strong>brak lokalizacji</strong>';
                                 badge.style.background = '#f8f9fa';
                                 badge.style.borderColor = '#6c757d';
                             }
@@ -865,7 +874,7 @@
                 white-space:nowrap;
                 width:fit-content;
                 `;
-                badge.innerHTML = '🔵 Dyspozycyjny M1: <strong>ładowanie...</strong>';
+                badge.innerHTML = '🔃 Dyspozycyjny M1: <strong>ładowanie...</strong>';
                 actionsBar.insertAdjacentElement('afterbegin', badge);
 
                 GM_xmlhttpRequest({
@@ -882,24 +891,25 @@
                             const doc = new DOMParser().parseFromString(response.responseText, 'text/html');
                             const row = doc.querySelector('table tbody tr');
                             if (!row) {
-                                badge.innerHTML = '🔵 Dyspozycyjny M1: <strong>brak danych</strong>';
+                                badge.innerHTML = '❓ Dyspozycyjny M1: <strong>brak danych</strong>';
                                 return;
                             }
                             const cells = row.querySelectorAll('td');
                             const raw = cells[1] ? cells[1].textContent.trim() : '-';
                             const val = raw === '-' ? 0 : parseInt(raw, 10);
-                            const disp = isNaN(val) ? 0 : val;
+                            const parsedVal = isNaN(val) ? 0 : val;
+                            const disp = parsedVal === 0 ? 'BRAK' : parsedVal;
                             badge.style.background = '#FDF5E6';
                             badge.style.borderColor = '#D2B48C';
-                            badge.innerHTML = `🔵 Dyspozycyjny M1: <strong>${disp}</strong>`;
+                            badge.innerHTML = `✅ Dyspozycyjny M1: <strong>${disp}</strong>`;
                         } catch (e) {
-                            badge.innerHTML = '🔵 Dyspozycyjny M1: <strong>błąd</strong>';
+                            badge.innerHTML = '❌ Dyspozycyjny M1: <strong>ERROR</strong>';
                             badge.style.background = '#f8d7da';
                             badge.style.borderColor = '#dc3545';
                         }
                     },
                     onerror: function () {
-                        badge.innerHTML = '🔵 Dyspozycyjny M1: <strong>błąd połączenia</strong>';
+                        badge.innerHTML = '❓ Dyspozycyjny M1: <strong>błąd połączenia - zaloguj się na idosell!</strong>';
                         badge.style.background = '#f8d7da';
                         badge.style.borderColor = '#dc3545';
                     }
