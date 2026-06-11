@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Megadron Scripts Packed
 // @namespace    megadron.pl
-// @version      1.2
+// @version      1.2.1
 // @description  do repozytorium
 // @author       DF
 // @match        https://client6220.idosell.com/*
@@ -558,7 +558,7 @@
         function runOtherOrders() {
             const old = document.getElementById('tm-order-box');
             if (old) old.remove();
-            const links = document.querySelectorAll('a[style*="--color-status-on-order"]');
+            const links = document.querySelectorAll('a[style*="--color-status-on_order"]');
             if (links.length === 0) return;
             const orders = [...links].map(a => ({ number: a.textContent.trim(), href: a.href }));
 
