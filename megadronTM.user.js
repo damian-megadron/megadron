@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Megadron Scripts Packed
 // @namespace    megadron.pl
-// @version      1.2.1
+// @version      1.2.2
 // @description  do repozytorium
 // @author       DF
 // @match        https://client6220.idosell.com/*
@@ -19,8 +19,9 @@
 
     const url = window.location.href;
 
-
+    // ════════════════════════════════════════════════════════════════════════
     // GUZICZKI GABARYTÓW INPOST
+    // ════════════════════════════════════════════════════════════════════════
 
     if (url.includes('/panel/order-verification.php')) {
 
@@ -917,5 +918,141 @@
             });
         }
     }
+
+    // ════════════════════════════════════════════════════════════════════════
+    // NUMERY SERYJNE - REAKCJA NA ENTER/SKANER + TOAST Z SN'AMI
+    // ════════════════════════════════════════════════════════════════════════
+
+    if (url.includes('/panel/order-verification.php')) {
+        (function () {
+    'use strict';
+
+    function getSerialInputs() {
+        return document.querySelectorAll('#addPosition input[id^="fg_serialnumber"]');
+    }
+
+    function getSaveButton() {
+        return document.querySelector('#addPosition input.formbutton[type="button"]');
+    }
+
+    function getCodeField() {
+        return document.getElementById('fg_code');
+    }
+
+    function isPanelVisible() {
+        const c = document.getElementById('addPosition_c');
+        if (!c) return false;
+        return c.style.visibility !== 'hidden' && c.offsetParent !== null;
+    }
+
+    function focusCodeField() {
+        const codeInput = getCodeField();
+        if (!codeInput) return;
+
+        codeInput.focus();
+        codeInput.dispatchEvent(new MouseEvent('click', {
+            bubbles: true,
+            cancelable: true,
+            view: window
+        }));
+    }
+
+    const TOAST_DURATION_MS = 2500;
+
+    function showSavedToast(serials) {
+        const toast = document.createElement('div');
+
+        serials.forEach(function (s) {
+            const line = document.createElement('div');
+            line.textContent = 'Nr ' + s.index + ': ' + s.value;
+            toast.appendChild(line);
+        });
+
+        Object.assign(toast.style, {
+            position: 'fixed',
+            top: '25vh',
+            left: '50%',
+            zIndex: '999999',
+            background: '#323232',
+            color: '#fff',
+            padding: '12px 22px',
+            borderRadius: '8px',
+            fontSize: '14px',
+            fontFamily: 'Arial, sans-serif',
+            boxShadow: '0 2px 10px rgba(0,0,0,0.3)',
+            opacity: '0',
+            textAlign: 'center',
+            lineHeight: '1.5',
+            transform: 'translateX(-50%) translateY(-12px)',
+            transition: 'opacity 0.25s ease, transform 0.25s ease',
+            pointerEvents: 'none'
+        });
+
+        document.body.appendChild(toast);
+
+        requestAnimationFrame(() => {
+            toast.style.opacity = '1';
+            toast.style.transform = 'translateX(-50%) translateY(0)';
+        });
+
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(-50%) translateY(-12px)';
+            setTimeout(() => toast.remove(), 300);
+        }, TOAST_DURATION_MS);
+    }
+
+    document.addEventListener('click', function (e) {
+        const saveBtn = getSaveButton();
+        if (!saveBtn || e.target !== saveBtn) return;
+
+        const inputs = getSerialInputs();
+        const serials = Array.from(inputs)
+            .map(function (inp, idx) {
+                return { index: idx + 1, value: (inp.value || '').trim() };
+            })
+            .filter(function (s) { return s.value !== ''; });
+
+        if (serials.length > 0) {
+            showSavedToast(serials);
+        }
+    }, true);
+
+    let wasVisible = false;
+
+    const visibilityObserver = new MutationObserver(() => {
+        const nowVisible = isPanelVisible();
+        if (wasVisible && !nowVisible) {
+            setTimeout(focusCodeField, 50);
+        }
+        wasVisible = nowVisible;
+    });
+
+    visibilityObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['style'],
+        subtree: true
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key !== 'Enter') return;
+
+        const target = e.target;
+        if (!target || !target.id || !target.id.startsWith('fg_serialnumber')) return;
+
+        const inputs = getSerialInputs();
+        const lastInput = inputs[inputs.length - 1];
+
+        if (target === lastInput) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const saveBtn = getSaveButton();
+            if (saveBtn) {
+                saveBtn.click();
+            }
+        }
+    }, true);
+
 
 })();
