@@ -1,18 +1,18 @@
 // ==UserScript==
 // @name         Megadron Scripts Packed
 // @namespace    megadron.pl
-// @version      1.2.2.1
+// @version      1.2.2.2
 // @description  do repozytorium
 // @author       DF
 // @match        https://client6220.idosell.com/*
 // @match        https://megadron.pl/pl/products/*
 // @grant        GM_xmlhttpRequest
 // @connect      client6220.idosell.com
-// @updateURL    https://raw.githubusercontent.com/damian-megadron/megadron/refs/heads/main/megadronTM.user.js
-// @downloadURL  https://raw.githubusercontent.com/damian-megadron/megadron/refs/heads/main/megadronTM.user.js
+// @updateURL    https://raw.githubusercontent.com/phantomgdrn81/megadron/refs/heads/main/megadronTM.user.js
+// @downloadURL  https://raw.githubusercontent.com/phantomgdrn81/megadron/refs/heads/main/megadronTM.user.js
 // ==/UserScript==
 
-/* global $, IAI */ //bo krzyczy
+/* global $, IAI */ //clearing the triggers
 
 (function () {
     'use strict';
